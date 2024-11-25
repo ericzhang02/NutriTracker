@@ -64,6 +64,7 @@ const LoginScreen: React.FC = () => {
 
         if (usersData[username] && usersData[username] === password) {
           await AsyncStorage.setItem('status', JSON.stringify(true));
+          await AsyncStorage.setItem('username', JSON.stringify(username));
           setLoggedIn(true)
           
         } else {
