@@ -34,12 +34,14 @@ const foodLogsQuery = gql`
   }
 `;
 
+let cachedUsername: string | null = null;
+
 export default function HomeScreen() {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState<string | null>(null);
   const router = useRouter();
-  const user_id = "Eric zhang";
+  const [user_id, set_user_id] = useState<string | null>(null);
   const date = dayjs().format("YYYY-MM-DD");
   const [carbGoal, setCarbGoal] = useState<string>('');
   const [calGoal, setCalGoal] = useState<string>('');
@@ -53,6 +55,17 @@ export default function HomeScreen() {
     skip: !loggedIn,
   });
 
+  useEffect(() => {
+    const fetchUsername = async () => {
+      if (!cachedUsername) {
+        const name = await AsyncStorage.getItem("username");
+        cachedUsername = name;
+      }
+      set_user_id(cachedUsername);
+    };
+    fetchUsername();
+  }, []);
+
   // Check login status on component mount
   useEffect(() => {
     const checkLoginStatus = async () => {
@@ -65,6 +78,7 @@ export default function HomeScreen() {
         const savedGoals = await AsyncStorage.getItem("goals");
         if(name != null){
           setUsername(JSON.parse(name))
+
         }
         if(savedGoals){
           const goalsData = JSON.parse(savedGoals);

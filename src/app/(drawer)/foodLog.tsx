@@ -11,8 +11,10 @@ import {
 import { gql, useQuery } from "@apollo/client";
 import dayjs from "dayjs";
 import FoodLogListItem from "../../components/FoodLogListItem";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AntDesign } from '@expo/vector-icons';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 // Query to fetch food logs for a specific date
 const foodLogsQuery = gql`
@@ -32,11 +34,22 @@ const foodLogsQuery = gql`
     }
   }
 `;
-
+let cachedUsername: string | null = null;
 export default function HomeScreen() {
-  const user_id = "Eric zhang";
+  const [user_id, set_user_id] = useState<string | null>(null);
   const today = dayjs().format("YYYY-MM-DD");
   const [date, setDate] = useState(today);
+
+  useEffect(() => {
+    const fetchUsername = async () => {
+      if (!cachedUsername) {
+        const name = await AsyncStorage.getItem("username");
+        cachedUsername = name;
+      }
+      set_user_id(cachedUsername);
+    };
+    fetchUsername();
+  }, []);
 
   // Fetch food logs
   const { data, loading, error } = useQuery(foodLogsQuery, {

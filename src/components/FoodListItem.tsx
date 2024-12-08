@@ -77,7 +77,7 @@ const FoodListItem = ({ item }) => {
           protien: item.food.nutrients.PROCNT,
           image: "",
           label: item.food.label,
-          user_id: "Eric zhang",
+          user_id: usernm,
         },
       });
     }
@@ -92,7 +92,7 @@ const FoodListItem = ({ item }) => {
           protien: item.food.nutrients.PROCNT,
           image: item.food.image,
           label: item.food.label,
-          user_id: "Eric zhang",
+          user_id: usernm,
         },
       });
     }
