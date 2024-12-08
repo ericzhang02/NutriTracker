@@ -2,6 +2,11 @@ import { View, Text, StyleSheet } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { gql, useMutation } from "@apollo/client";
 import { useRouter } from "expo-router";
+import React, { useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+
+let cachedUsername: string | null = null;
 
 const mutation = gql`
   mutation MyMutation(
@@ -27,10 +32,22 @@ const mutation = gql`
 `;
 
 const FoodListItem = ({ item }) => {
+  const [usernm, set_user_id] = useState<string | null>(null);
   const [logFood] = useMutation(mutation, {
     refetchQueries: ["foodLogsForDate"],
   });
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchUsername = async () => {
+      if (!cachedUsername) {
+        const name = await AsyncStorage.getItem("username");
+        cachedUsername = name;
+      }
+      set_user_id(cachedUsername);
+    };
+    fetchUsername();
+  }, []);
 
   const onPlusPressed = async () => {
     await logFood({
@@ -38,7 +55,7 @@ const FoodListItem = ({ item }) => {
         food_id: item.food.foodId,
         kcal: item.food.nutrients.ENERC_KCAL,
         label: item.food.label,
-        user_id: "Eric zhang",
+        user_id: usernm,
       },
     });
     router.back();

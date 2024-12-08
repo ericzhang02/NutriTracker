@@ -38,14 +38,24 @@ const kcalTotalQuery = gql`
 
 
 
-
+let cachedUsername: string | null = null;
 export default function HomeScreen() {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-
-  const user_id = "Eric zhang";
+  const [user_id, set_user_id] = useState<string | null>(null);
   const date = dayjs().format("YYYY-MM-DD");
+
+  useEffect(() => {
+    const fetchUsername = async () => {
+      if (!cachedUsername) {
+        const name = await AsyncStorage.getItem("username");
+        cachedUsername = name;
+      }
+      set_user_id(cachedUsername);
+    };
+    fetchUsername();
+  }, []);
 
   // Fetch food logs query, skipped until user is logged in
   const { data: foodData, loading: foodLoading, error: foodError } = useQuery(foodLogsQuery, {
