@@ -4,9 +4,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 //import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
-import HomeScreen from '.';
+import HomeScreen from './(drawer)';
 import LoginScreen from './login';
-import SearchScreen from './search';
+import SearchScreen from './(drawer)/search';
+import WeightScreen from './(drawer)/weight';
 
 //const Stack = createStackNavigator();
 
@@ -38,14 +39,10 @@ const RootLayout = () => {
 
   return (
     <ApolloProvider client={client}>
-        <Stack>
-          <Stack.Screen name="login" options={{title: 'Login'}}/>
-          <Stack.Screen name="index" options={{ title: 'Home' }} />
-          <Stack.Screen name="search" options={{ title: 'About' }} />
-          <Stack.Screen name="logout" options={{title: 'Logging out!'}}/>
-        </Stack>
-
-        
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="login" />
+        <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
+      </Stack>
     </ApolloProvider>
   );
 };

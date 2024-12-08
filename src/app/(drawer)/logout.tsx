@@ -4,7 +4,7 @@ import { View, Text, TextInput, Button, StyleSheet, Alert, Linking } from 'react
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useLinkTo } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
-import RootLayout from './_layout';
+import RootLayout from '../_layout';
 import HomeScreen from '.';
 
 const LogoutScreen: React.FC = () => {
@@ -12,7 +12,7 @@ const LogoutScreen: React.FC = () => {
   const [password, setPassword] = useState<string>('');
   const [isLoginMode, setIsLoginMode] = useState<boolean>(true);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
-
+const router = useRouter();
 
   const handleLogout = async () => {
     //const linkTo = useLinkTo();
@@ -20,6 +20,8 @@ const LogoutScreen: React.FC = () => {
         await AsyncStorage.setItem('status', JSON.stringify(false));
         const val = await AsyncStorage.getItem('status')
         Alert.alert("status", val?.toString())
+
+        router.replace('/login');
       } 
       catch (error) {
         console.error('Error retrieving user data', error);
