@@ -82,7 +82,7 @@ const WeightScreen = () => {
           keyboardType="numeric"
         />
         <TouchableOpacity style={styles.searchButton} onPress={handleAddWeight}>
-          <Text style={styles.searchButtonText}>Save Goals</Text>
+          <Text style={styles.searchButtonText}>Save Weight</Text>
         </TouchableOpacity>
       </View>
 

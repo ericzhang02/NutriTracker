@@ -34,7 +34,7 @@ const foodLogsQuery = gql`
     }
   }
 `;
-let cachedUsername: string | null = null;
+
 export default function HomeScreen() {
   const [user_id, set_user_id] = useState<string | null>(null);
   const today = dayjs().format("YYYY-MM-DD");
@@ -42,11 +42,15 @@ export default function HomeScreen() {
 
   useEffect(() => {
     const fetchUsername = async () => {
-      if (!cachedUsername) {
+      try {
         const name = await AsyncStorage.getItem("username");
-        cachedUsername = name;
+        if (name) {
+          const parsedName = JSON.parse(name);
+          set_user_id(parsedName);
+        }
+      } catch (error) {
+        console.error("Error fetching username:", error);
       }
-      set_user_id(cachedUsername);
     };
     fetchUsername();
   }, []);

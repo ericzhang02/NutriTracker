@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
-import { gql, useQuery } from "@apollo/client";
+import { gql, useQuery, useMutation } from "@apollo/client";
 import dayjs from "dayjs";
 import FoodLogListItem from "../../components/FoodLogListItem";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -34,7 +34,43 @@ const foodLogsQuery = gql`
   }
 `;
 
-let cachedUsername: string | null = null;
+const mutation = gql`
+  mutation MyMutation(
+    $food_id: String!
+    $carb: Int!
+    $kcal: Int!
+    $fat: Int!
+    $fiber: Int!
+    $protien: Int!
+    $image: String!
+    $label: String!
+    $user_id: String!
+  ) {
+    insertFood_log(
+      food_id: $food_id
+      carb: $carb
+      kcal: $kcal
+      fat: $fat
+      fiber: $fiber
+      protien: $protien
+      image: $image
+      label: $label
+      user_id: $user_id
+    ) {
+      created_at
+      food_id
+      id
+      carb
+      kcal
+      fat
+      fiber
+      protien
+      image
+      label
+      user_id
+    }
+  }
+`;
 
 export default function HomeScreen() {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
@@ -51,15 +87,16 @@ export default function HomeScreen() {
 
   const { data: foodData, loading: foodLoading, error: foodError, refetch } = useQuery(foodLogsQuery, {
     variables: { date, user_id },
-    skip: !loggedIn || !user_id, // Skip until logged in and user_id is set
+    skip: !loggedIn || !user_id,
   });
 
   useEffect(() => {
     const fetchUsername = async () => {
       const name = await AsyncStorage.getItem("username");
       if (name) {
-        set_user_id(JSON.parse(name)); // Update user_id
-        setUsername(JSON.parse(name)); // Set username
+        const parsedName = JSON.parse(name);
+        setUsername(parsedName);
+        set_user_id(parsedName);
       }
     };
     fetchUsername();
@@ -93,7 +130,7 @@ export default function HomeScreen() {
 
   useEffect(() => {
     if (user_id) {
-      refetch({ date, user_id }); // Re-fetch query when user_id changes
+      refetch({ date, user_id });
     }
   }, [user_id, date, refetch]);
 

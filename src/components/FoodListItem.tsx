@@ -5,9 +5,6 @@ import { useRouter } from "expo-router";
 import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
-let cachedUsername: string | null = null;
-
 const mutation = gql`
   mutation MyMutation(
     $food_id: String!
@@ -55,35 +52,25 @@ const FoodListItem = ({ item }) => {
 
   useEffect(() => {
     const fetchUsername = async () => {
-      if (!cachedUsername) {
-        const name = await AsyncStorage.getItem("username");
-        cachedUsername = name;
-      }
-      if(cachedUsername !== null){
-        set_user_id(JSON.parse(cachedUsername));
+      const name = await AsyncStorage.getItem("username");
+      if (name) {
+        set_user_id(JSON.parse(name));
       }
     };
+
     fetchUsername();
   }, []);
 
   const onPlusPressed = async () => {
-    console.log(usernm + "print")
-    if(item.food.image === null){
-      await logFood({
-        variables: {
-          food_id: item.food.foodId,
-          carb: item.food.nutrients.CHOCDF,
-          kcal: item.food.nutrients.ENERC_KCAL,
-          fat: item.food.nutrients.FAT,
-          fiber: item.food.nutrients.FIBTG,
-          protien: item.food.nutrients.PROCNT,
-          image: "",
-          label: item.food.label,
-          user_id: usernm,
-        },
-      });
+    const name = await AsyncStorage.getItem("username");
+    const currentUsername = name ? JSON.parse(name) : null;
+    
+    if (!currentUsername) {
+      console.error("No user found");
+      return;
     }
-    else{
+
+    try {
       await logFood({
         variables: {
           food_id: item.food.foodId,
@@ -92,11 +79,13 @@ const FoodListItem = ({ item }) => {
           fat: item.food.nutrients.FAT,
           fiber: item.food.nutrients.FIBTG,
           protien: item.food.nutrients.PROCNT,
-          image: item.food.image,
+          image: item.food.image || "",
           label: item.food.label,
-          user_id: usernm,
+          user_id: currentUsername,
         },
       });
+    } catch (error) {
+      console.error("Error logging food:", error);
     }
     router.back();
   };
