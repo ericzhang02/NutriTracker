@@ -74,6 +74,11 @@ const LoginScreen: React.FC = () => {
     checkLog();
   }, [loggedIn]);
 
+  // useEffect(() => {
+  //   console.log(username + "username here")
+  //   console.log(JSON.parse(JSON.stringify(password)) + "password here")
+  // },[username,password])
+
   const handleLogin = async () => {
     //const linkTo = useLinkTo();
     if (username && password) {

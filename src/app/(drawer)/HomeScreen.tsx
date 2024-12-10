@@ -49,44 +49,40 @@ export default function HomeScreen() {
   const [fatGoal, setFatGoal] = useState<string>('');
   const [fiberGoal, setFiberGoal] = useState<string>('');
 
-  // Fetch food logs query, skipped until user is logged in
-  const { data: foodData, loading: foodLoading, error: foodError } = useQuery(foodLogsQuery, {
+  const { data: foodData, loading: foodLoading, error: foodError, refetch } = useQuery(foodLogsQuery, {
     variables: { date, user_id },
-    skip: !loggedIn,
+    skip: !loggedIn || !user_id, // Skip until logged in and user_id is set
   });
 
   useEffect(() => {
     const fetchUsername = async () => {
-      if (!cachedUsername) {
-        const name = await AsyncStorage.getItem("username");
-        cachedUsername = name;
+      const name = await AsyncStorage.getItem("username");
+      if (name) {
+        set_user_id(JSON.parse(name)); // Update user_id
+        setUsername(JSON.parse(name)); // Set username
       }
-      set_user_id(cachedUsername);
     };
     fetchUsername();
   }, []);
 
-  // Check login status on component mount
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
         const userData = await AsyncStorage.getItem("status");
         const isLoggedIn = userData ? JSON.parse(userData) === true : false;
         setLoggedIn(isLoggedIn);
-        setLoading(false); // Stop loading after login status is checked
-        const name = await AsyncStorage.getItem("username")
-        const savedGoals = await AsyncStorage.getItem("goals");
-        if(name != null){
-          setUsername(JSON.parse(name))
+        setLoading(false);
 
-        }
-        if(savedGoals){
-          const goalsData = JSON.parse(savedGoals);
-          setCarbGoal(goalsData.carbs || '');
-          setCalGoal(goalsData.cals || '');
-          setProteinGoal(goalsData.protein || '');
-          setFatGoal(goalsData.fat || '');
-          setFiberGoal(goalsData.fiber || '');
+        if (isLoggedIn) {
+          const savedGoals = await AsyncStorage.getItem("goals");
+          if (savedGoals) {
+            const goalsData = JSON.parse(savedGoals);
+            setCarbGoal(goalsData.carbs || '');
+            setCalGoal(goalsData.cals || '');
+            setProteinGoal(goalsData.protein || '');
+            setFatGoal(goalsData.fat || '');
+            setFiberGoal(goalsData.fiber || '');
+          }
         }
       } catch (error) {
         console.log(error);
@@ -94,6 +90,12 @@ export default function HomeScreen() {
     };
     checkLoginStatus();
   }, []);
+
+  useEffect(() => {
+    if (user_id) {
+      refetch({ date, user_id }); // Re-fetch query when user_id changes
+    }
+  }, [user_id, date, refetch]);
 
   const handleLogin = async () => {
     router.replace("/login");
@@ -131,20 +133,18 @@ export default function HomeScreen() {
   }
 
   const foodLogs = foodData?.foodLogsForDate || [];
-  // Calculate total calories dynamically
   const totalCalories = foodLogs.reduce((sum, log) => sum + (log.kcal || 0), 0);
   const totalCarbs = foodLogs.reduce((sum, log) => sum + (log.carb || 0), 0);
   const totalFat = foodLogs.reduce((sum, log) => sum + (log.fat || 0), 0);
   const totalFiber = foodLogs.reduce((sum, log) => sum + (log.fiber || 0), 0);
   const totalProtein = foodLogs.reduce((sum, log) => sum + (log.protien || 0), 0);
 
-  // Calculate progress percentage
   const calcProgress = (actual: number, goal: string) => {
     const goalValue = parseFloat(goal);
     const progress = goalValue > 0 ? (actual / goalValue) * 100 : 0;
     return parseFloat(Math.min(progress, 100).toFixed(2));
   };
-  
+
   const progressCalories = calcProgress(totalCalories, calGoal);
   const progressCarbs = calcProgress(totalCarbs, carbGoal);
   const progressProtein = calcProgress(totalProtein, proteinGoal);

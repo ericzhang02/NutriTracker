@@ -59,13 +59,15 @@ const FoodListItem = ({ item }) => {
         const name = await AsyncStorage.getItem("username");
         cachedUsername = name;
       }
-      set_user_id(cachedUsername);
+      if(cachedUsername !== null){
+        set_user_id(JSON.parse(cachedUsername));
+      }
     };
     fetchUsername();
   }, []);
 
   const onPlusPressed = async () => {
-    console.log(item.food.image)
+    console.log(usernm + "print")
     if(item.food.image === null){
       await logFood({
         variables: {
