@@ -88,7 +88,7 @@ const FoodListItem = ({ item }) => {
     });
   
 
-    router.back();
+    router.replace("/(drawer)");
   };
 
   return (

@@ -180,10 +180,14 @@ export default function SearchScreen() {
         )}
         {loading && <ActivityIndicator />}
         <FlatList
+          initialNumToRender={15}
+          maxToRenderPerBatch={15}
+          windowSize={10}
           style={{ paddingRight: 10 }}
+          removeClippedSubviews={true}
           data={items}
           renderItem={({ item }) => <FoodListItem item={item} />}
-          keyExtractor={(item) => item.label}
+          keyExtractor={(item) => item.food.foodId.toString()}
           ListEmptyComponent={() => <Text></Text>}
           contentContainerStyle={{ gap: 10 }}
         />
