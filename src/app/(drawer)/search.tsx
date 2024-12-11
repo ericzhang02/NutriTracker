@@ -23,6 +23,7 @@ import {
   useCameraPermissions,
   Camera,
 } from "expo-camera";
+import { useRouter } from "expo-router";
 
 const query = gql`
   query search($ingr: String, $upc: String) {
@@ -53,6 +54,7 @@ export default function SearchScreen() {
   const [runSearch, { data, loading, error }] = useLazyQuery(query);
   const [permission, requestPermission] = useCameraPermissions();
   const [facing, setFacing] = useState<CameraType>("back");
+  const router = useRouter();
 
   requestPermission();
 
@@ -61,12 +63,20 @@ export default function SearchScreen() {
     // setSearch("");
   };
 
+  const undoThing = () => {
+    router.replace("/(drawer)")
+  }
+
   // if (loading) {
   //   return <ActivityIndicator />;
   // }
 
   if (error) {
-    return <Text>Failed to search</Text>;
+    return (<View style={styles.container}>
+      <Text style={styles.text}>Could not find item barcode, try again</Text>
+      <Button onPress={undoThing} title="Go back"/>
+
+    </View>)
   }
 
   if (!permission) {

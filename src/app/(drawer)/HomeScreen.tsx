@@ -142,7 +142,7 @@ export default function HomeScreen() {
     try {
       await AsyncStorage.setItem("status", JSON.stringify(false));
       setLoggedIn(false);
-      Alert.alert("Logged Out", "You have been logged out.");
+      //Alert.alert("Logged Out", "You have been logged out.");
     } catch (error) {
       console.error("Error setting logout status", error);
     }

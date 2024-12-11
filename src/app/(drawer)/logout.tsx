@@ -19,7 +19,7 @@ const router = useRouter();
       try {
         await AsyncStorage.setItem('status', JSON.stringify(false));
         const val = await AsyncStorage.getItem('status')
-        Alert.alert("status", val?.toString())
+        //Alert.alert("status", val?.toString())
 
         router.replace('/login');
       } 

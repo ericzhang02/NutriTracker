@@ -99,7 +99,7 @@ export default function HomeScreen() {
         <Text style={styles.dateText}>{dayjs(date).format("MMMM DD, YYYY")}</Text>
         <TouchableOpacity 
           onPress={goToNextDay} 
-          disabled={isToday}
+          
         >
           <AntDesign 
             name="right" 

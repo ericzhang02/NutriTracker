@@ -64,29 +64,30 @@ const FoodListItem = ({ item }) => {
   const onPlusPressed = async () => {
     const name = await AsyncStorage.getItem("username");
     const currentUsername = name ? JSON.parse(name) : null;
-    
+  
     if (!currentUsername) {
       console.error("No user found");
       return;
     }
+  
 
-    try {
-      await logFood({
-        variables: {
-          food_id: item.food.foodId,
-          carb: item.food.nutrients.CHOCDF,
-          kcal: item.food.nutrients.ENERC_KCAL,
-          fat: item.food.nutrients.FAT,
-          fiber: item.food.nutrients.FIBTG,
-          protien: item.food.nutrients.PROCNT,
-          image: item.food.image || "",
-          label: item.food.label,
-          user_id: currentUsername,
-        },
-      });
-    } catch (error) {
+    logFood({
+      variables: {
+        food_id: item.food.foodId || 0,
+        carb: item.food.nutrients.CHOCDF || 0,
+        kcal: item.food.nutrients.ENERC_KCAL || 0,
+        fat: item.food.nutrients.FAT || 0,
+        fiber: item.food.nutrients.FIBTG || 0,
+        protien: item.food.nutrients.PROCNT || 0,
+        image: item.food.image || "",
+        label: item.food.label || "",
+        user_id: currentUsername,
+      },
+    }).catch((error) => {
       console.error("Error logging food:", error);
-    }
+    });
+  
+
     router.back();
   };
 
