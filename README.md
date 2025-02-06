@@ -40,7 +40,7 @@ The development of **NutriTracker** involved the following contributors and thei
 ## **Usage**
 
 To get a better understanding of how **NutriTracker** works, check out this demo video:  
-🎥 [**NutriTracker Demo Video**](https://www.google.com/url?q=https://www.google.com/url?q%3Dhttps://photos.google.com/share/AF1QipMYfloEMoSOX9H3awO3lBBwF3Fmbgh-wlFUnzlmrWZPzO4CO79pUArUdyxUJY2ifw?key%253Da2pOWGdpblVkaE9WNUJWNlVpOThLM1pnd1RhM21R%26amp;sa%3DD%26amp;source%3Deditors%26amp;ust%3D1733958317345578%26amp;usg%3DAOvVaw1wZS8vfKmYjhl8CQ58bi6o&sa=D&source=docs&ust=1733958317348553&usg=AOvVaw3NS2GeZNCsxby6wU09P2KL)  
+🎥 [**NutriTracker Demo Video**]([https://www.google.com/url?q=https://www.google.com/url?q%3Dhttps://photos.google.com/share/AF1QipMYfloEMoSOX9H3awO3lBBwF3Fmbgh-wlFUnzlmrWZPzO4CO79pUArUdyxUJY2ifw?key%253Da2pOWGdpblVkaE9WNUJWNlVpOThLM1pnd1RhM21R%26amp;sa%3DD%26amp;source%3Deditors%26amp;ust%3D1733958317345578%26amp;usg%3DAOvVaw1wZS8vfKmYjhl8CQ58bi6o&sa=D&source=docs&ust=1733958317348553&usg=AOvVaw3NS2GeZNCsxby6wU09P2KL](https://www.youtube.com/shorts/RXRSHU0F0RE))  
 
 ### **Core Functionalities**
 - **Barcode Scanning**: Scan the barcode of any food item to instantly retrieve its nutritional details, including protein, carbs, fats, fiber, and calorie counts. 
